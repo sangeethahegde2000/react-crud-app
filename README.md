@@ -1,73 +1,56 @@
-# React + TypeScript + Vite
+# react-crud-app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Short README for this project.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Install dependencies:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Start the mock API (json-server):
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run serve:api
+# JSON API served at http://localhost:3000
 ```
+
+- Start the frontend dev server:
+
+```bash
+npm run dev
+# Vite dev server (usually http://localhost:5173)
+```
+
+## Where to look in the code
+- App entry: [src/main.tsx](src/main.tsx)
+- Page layout and dialog wiring: [src/App.tsx](src/App.tsx)
+- User table + search + pagination: [src/components/UserList.tsx](src/components/UserList.tsx)
+- Form driven by schema: [src/components/UserForm.tsx](src/components/UserForm.tsx)
+- Field definitions & validation: [src/schema/userSchema.ts](src/schema/userSchema.ts)
+- Types: [src/types/user.ts](src/types/user.ts)
+- API client: [src/services/api.ts](src/services/api.ts)
+- Mock database: [db.json](db.json)
+
+## Add a new field to the user form
+
+1. Update the TypeScript type: add the new property to [src/types/user.ts](src/types/user.ts).
+2. Add the field definition to [src/schema/userSchema.ts](src/schema/userSchema.ts): add an entry to `userFields` with `name`, `label`, `type`, and `required`.
+  - The `UserForm` maps `userFields` to inputs automatically, so the form will render the new field.
+3. (Optional) Update `db.json` sample records so the new field appears in existing sample data.
+4. If you need custom validation, extend the validator in `userSchema.ts`.
+
+## Assumptions and design notes
+
+- UI library: Material UI (MUI) is used for components and layout.
+- Form driven by a central schema (`src/schema/userSchema.ts`) so fields are easy to add/remove.
+- The app uses a mock JSON API (`json-server`) for local development.
+- Pagination and search are client-side (suitable for small datasets). For larger datasets, implement server-side pagination and search in `src/services/api.ts` and update `getUsers` accordingly.
+- The form opens in a modal dialog for add/edit; initial view shows only the table.
+
+If you'd like, I can also add a CONTRIBUTING section, CI steps, or scripts to seed `db.json`.
+    - Types: [src/types/user.ts](src/types/user.ts)
+
+    - API client: [src/services/api.ts](src/services/api.ts)

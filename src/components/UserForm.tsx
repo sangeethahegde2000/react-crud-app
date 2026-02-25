@@ -41,12 +41,9 @@ export default function UserForm({ initialUser, onSaved, onCancel }: { initialUs
   }, [initialUser]);
 
   return (
-    <Card variant="outlined" sx={{ mb: 2 }}>
-      <CardContent>
+    <Card sx={{boxShadow:'none' }}>
+      <CardContent sx={{p:'16px 0 0 0'}}>
         <form onSubmit={handleSubmit}>
-          <Typography variant="h6" component="div" sx={{ mb: 1 }}>
-            {initialUser ? 'Edit User' : 'Add User'}
-          </Typography>
           <Stack spacing={2}>
             {userFields.map((f) => (
               <TextField
@@ -67,11 +64,11 @@ export default function UserForm({ initialUser, onSaved, onCancel }: { initialUs
             )}
 
             <Stack direction="row" spacing={1}>
-              <Button type="submit" variant="contained" disabled={loading}>
+              <Button type="submit" variant="contained" disabled={loading} sx={{textTransform:'none'}}>
                 {loading ? 'Saving...' : (initialUser ? 'Save' : 'Add User')}
               </Button>
               {initialUser && (
-                <Button variant="outlined" onClick={() => onCancel?.()} disabled={loading}>
+                <Button variant="outlined" onClick={() => onCancel?.()} disabled={loading}  sx={{textTransform:'none'}}>
                   Cancel
                 </Button>
               )}

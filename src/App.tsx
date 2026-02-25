@@ -3,11 +3,12 @@ import type { User } from './types/user'
 import './App.css'
 import UserForm from './components/UserForm'
 import UserList from './components/UserList'
-import { Container, Box, Typography } from '@mui/material'
+import { Container, Box, Typography, Dialog, DialogTitle, DialogContent } from '@mui/material'
 
 export default function App() {
   const [refresh, setRefresh] = useState(0)
   const [editing, setEditing] = useState<User | null>(null)
+  const [showForm, setShowForm] = useState(false)
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -17,29 +18,34 @@ export default function App() {
         </Typography>
       </Box>
 
-      <Box
-        display="grid"
-        gridTemplateColumns={{ xs: '1fr', md: '340px 1fr' }}
-        gap={3}
-      >
-        <Box>
-          <UserForm
-            initialUser={editing ?? undefined}
-            onSaved={() => {
-              setRefresh((r) => r + 1)
-              setEditing(null)
-            }}
-            onCancel={() => setEditing(null)}
-          />
-        </Box>
+      <Box>
+        <UserList
+          refreshTrigger={refresh}
+          onDeleted={() => setRefresh((r) => r + 1)}
+          onEdit={(u) => {
+            setEditing(u)
+            setShowForm(true)
+          }}
+          onAdd={() => setShowForm(true)}
+        />
 
-        <Box>
-          <UserList
-            refreshTrigger={refresh}
-            onDeleted={() => setRefresh((r) => r + 1)}
-            onEdit={(u) => setEditing(u)}
-          />
-        </Box>
+        <Dialog open={showForm || Boolean(editing)} onClose={() => { setEditing(null); setShowForm(false); }} maxWidth="sm" fullWidth>
+          <DialogTitle>{editing ? 'Edit User' : 'Add User'}</DialogTitle>
+          <DialogContent>
+            <UserForm
+              initialUser={editing ?? undefined}
+              onSaved={() => {
+                setRefresh((r) => r + 1)
+                setEditing(null)
+                setShowForm(false)
+              }}
+              onCancel={() => {
+                setEditing(null)
+                setShowForm(false)
+              }}
+            />
+          </DialogContent>
+        </Dialog>
       </Box>
     </Container>
   )
